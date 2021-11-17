@@ -1,17 +1,18 @@
-from django.shortcuts import render
-from .forms import SignUpForm
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+from accounts.forms import UserChangeForm
 
-def Signup(request):
-    if request.method == 'POST':
-        signup_form = SignUpForm(request.POST)
-        
-        if signup_form.is_valid():
-            user_instance = signup_form.save(commit=False)
-            user_instance.set_password(signup_form.cleaned_data['password'])
-            user_instance.save()
-            return render(request, 'accounts/signup_complete.html', {'username':user_instance.username})
-        
+
+def signup(request):
+    if request.method == "POST":
+        form = UserChangeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)  # 사용자 인증
+            login(request, user)  # 로그인
+            return redirect('photo:index')
     else:
-        signup_form = SignUpForm()
-        
-    return render(request, 'acccounts/signup.html', {'form':signup_form.as_p})
+        form = UserChangeForm()
+    return render(request, 'signup.html', {'form': form})

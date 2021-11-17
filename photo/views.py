@@ -2,8 +2,14 @@
 from django.views.generic.list import ListView
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic.detail import DetailView
-from django.shortcuts import redirect
-from .models import Photo
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.views.generic.base import View
+from django.http import HttpResponseForbidden
+from urllib.parse import urlparse
+from django.utils import timezone
+from .models import Photo, Comment
+from .forms import CommentForm
 # Create your views here.
 
 class PhotoList(ListView):
@@ -58,10 +64,6 @@ class PhotoDelete(DeleteView):
 class PhotoDetail(DetailView):
     model = Photo
     template_name_suffix = '_detail'
-    
-from django.views.generic.base import View
-from django.http import HttpResponseForbidden
-from urllib.parse import urlparse
 
 class PhotoLike(View):
     def get(self, request, *args, **kwargs):
@@ -135,3 +137,60 @@ class PhotoMyList(ListView):
             messages.warning(request, '로그인을 먼저 하세요')
             return HttpResponseRedirect('/')
         return super(PhotoMyList, self).dispatch(request, *args, **kwargs)
+    
+    
+@login_required(login_url='accounts:login')
+def comment_create_photo(request, photo_id):
+    """
+    photo 질문댓글등록
+    """
+    photo = get_object_or_404(Photo, pk=photo_id)
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.author = request.user
+            comment.create_date = timezone.now()
+            comment.photo = photo
+            comment.save()
+            return redirect('photo:detail', pk=photo.id)
+            # return HttpResponseRedirect('/')
+    else:
+        form = CommentForm()
+    context = {'form': form}
+    return render(request, 'photo/comment_form.html', context)
+
+@login_required(login_url='accounts:login')
+def comment_modify_photo(request, comment_id):
+    """
+    photo 질문댓글수정
+    """
+    comment = get_object_or_404(Comment, pk=comment_id)
+    if request.user != comment.author:
+        messages.error(request, '댓글수정권한이 없습니다')
+        return redirect('photo:detail', pk=comment.photo.id)
+
+    if request.method == "POST":
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.modify_date = timezone.now()
+            comment.save()
+            return redirect('photo:detail', pk=comment.photo.id)
+    else:
+        form = CommentForm(instance=comment)
+    context = {'form': form}
+    return render(request, 'photo/comment_form.html', context)
+
+@login_required(login_url='accounts:login')
+def comment_delete_photo(request, comment_id):
+    """
+    photo 질문댓글삭제
+    """
+    comment = get_object_or_404(Comment, pk=comment_id)
+    if request.user != comment.author:
+        messages.error(request, '댓글삭제권한이 없습니다')
+        return redirect('photo:detail', pk=comment.photo.id)
+    else:
+        comment.delete()
+    return redirect('photo:detail', pk=comment.photo.id)

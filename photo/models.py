@@ -8,7 +8,6 @@ class Photo(models.Model):
     image = models.ImageField(upload_to = 'timeline_photo/%Y/%m/%d')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    
     like = models.ManyToManyField(User, related_name='like_post', blank=True)
     favorite = models.ManyToManyField(User, related_name='favorite_post', blank=True)
     
@@ -20,3 +19,10 @@ class Photo(models.Model):
         
     def get_absolute_url(self):
         return reverse('photo:detail', args=[self.id])
+    
+class Comment(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    create_date = models.DateTimeField()
+    modify_date = models.DateTimeField(null=True, blank=True)
+    photo = models.ForeignKey(Photo, null=True, blank=True, on_delete=models.CASCADE)

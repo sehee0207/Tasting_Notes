@@ -12,9 +12,9 @@
                 <h5 class="card-title">{{ object.author }}</h5>
                 <p class="card-text"> {{ object.text }} </p>
             </div>
-            <ul class="list-group list-group-flush">
+            <ul class="list-group"> 
                 <li class="list-group-item">
-                    <a href="{% url 'photo:like' object.id %}" class="float-left btn-like {% if user in object.like.all %} acttive {% endif %}">좋아요!</a>
+                    <a href="{% url 'photo:like' object.id %}" class="float-left btn-like {% if user in object.like.all %} active {% endif %}">좋아요!</a>
                     {% if object.like.all.count %}
                     <span class="float-left">
                         {{object.like.all.count}}
@@ -22,25 +22,44 @@
                     {% endif %}
                     <a href="{% url 'photo:favorite' object.id %}" class="float-right btn-favorite {% if user in object.favorite.all %} active {% endif %}">저장하기!</a>
                 </li>
-                
-            <li class="list-group-item">생성일 : {{ object.created }}</li>
-           <li class="list-group-item">
-               
-                   {% load disqus_tags %} 
-                   <div class="card-body">
-                       {% disqus_show_comments %}
-                   </div>
-            </li>
+                <div class="card-body list-group-item">
+                    <p class="card-text">{{ object.text }}</p>
+                </div>
+                <li class="list-group-item">생성일 : {{ object.created }}</li>
+                <li class="list-group-item">수정일 : {{ object.updated }}</li>
+                <li class="list-group-item">
+                   {% if photo.comment_set.count > 0 %}
+                        <div class="mt-3">
+                        {% for comment in photo.comment_set.all %}  <!-- 등록한 댓글을 출력 -->
+                            <div class="comment py-2 text-muted">  <!-- 댓글 각각에 comment 스타일 지정 -->
+                                <span style="white-space: pre-line;">{{ comment.content }}</span>
+                                <span>
+                                    - {{ comment.author }}, {{ comment.create_date }}
+                                    {% if comment.modify_date %}
+                                    (수정:{{ comment.modify_date }})
+                                    {% endif %}
+                                </span>
+                                {% if request.user == comment.author %}
+                                <a href="{% url 'photo:comment_modify' comment.id  %}" class="small">수정</a>,
+                                <a href="{% url 'photo:comment_delete' comment.id  %}" class="small delete" 
+                                   data-uri="{% url 'photo:comment_delete' comment.id  %}">삭제</a>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        </div>
+                        {% endif %}
+                        <div>
+            </div>
             </ul>
             <div class="card-body">
                 <a href="{% url 'photo:update' object.id %}" class="card-link">수정하기</a>
                 <a href="{% url 'photo:delete' object.id %}" class="card-link">삭제하기</a>
+                <a href="{% url 'photo:comment_create' object.id %}" class="card-link">댓글달기</a>
             </div>
         </div>
     </div>
     
     <div class="col"></div>
-    <script id="dsq-count-scr" src="//hhitagram.disqus.com/count.js" async></script>
 </div>
 
 {% endblock %}

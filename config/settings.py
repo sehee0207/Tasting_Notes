@@ -37,10 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'photo',
-    'accounts',
-    'disqus',
     'django.contrib.sites',
+    'disqus',
+    'accounts',
+    'photo',
 ]
 
 MIDDLEWARE = [
@@ -126,7 +126,8 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/res/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-LOGIN_REDIRECT_URL ='/'
+LOGIN_REDIRECT_URL = '/'
+# LOGOUT_REDIRECT_URL = '/'
 
 DISQUS_WEBSITE_SHORTNAME = 'hhitagram'
 SITE_ID = 1

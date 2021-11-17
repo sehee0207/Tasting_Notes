@@ -9,17 +9,12 @@
         <div class="col"></div>
         <div class="col-5">
             {% for object in object_list %}
-            
-            <div class="card">
+            <div class="card" style="margin-bottom: 2em">
                 <div class="card-header">
                     {{ object.author }}
                 </div>
                 <img src=" {{ object.image.url }}" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <p class="card-text">{{ object.text }}</p>
-                </div>
-                <ul class="list-group list-group-flush">
-                    
+                <ul class="list-group"> 
                     <li class="list-group-item">
                         <a href="{% url 'photo:like' object.id %}" class="float-left btn-like {% if user in object.like.all %} active {% endif %}">좋아요!</a>
                         {% if object.like.all.count %}
@@ -29,32 +24,24 @@
                         {% endif %}
                         <a href="{% url 'photo:favorite' object.id %}" class="float-right btn-favorite {% if user in object.favorite.all %} active {% endif %}">저장하기!</a>
                     </li>
-                    
-                    <li class="list-group-item">수정일 : {{ object.created }}</li>
-                    <li class="list-group-item">생성일 : {{ object.updated }}</li>
+                    <div class="card-body list-group-item">
+                        <p class="card-text">{{ object.text }}</p>
+                    </div>
+                    <li class="list-group-item">생성일 : {{ object.created }}</li>
+                    <li class="list-group-item">수정일 : {{ object.updated }}</li>
                 </ul>
                 <div class="card-body">
-                    <a href="{% url 'photo:detail' object.id %}" class="card-link">댓글달기</a>
                     {% if user == object.author %}
                     <a href="{% url 'photo:update' object.id %}" class="card-link">수정하기</a>
                     <a href="{% url 'photo:delete' object.id %}" class="card-link">삭제하기</a>
                     {% endif %}
+                    <a href="{% url 'photo:detail' object.id %}" class="card-link">댓글달기</a>
                 </div>
             </div>
             {% endfor %}
         </div>
         
-        <div class="col">
-            {% load static %}
-            <div class="card" style="">
-                <img src="{% static 'images/hee.jpg' %}" class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title">admin</h5>
-                    <p class="card-text">회원님의 스토리를 확인해보세요!</p>
-                    <a href="{% url 'photo:mylist' %}" class="btn btn-primary">회원님의 스토리 이동</a>
-                </div>
-            </div>
-        </div>
+        <div class="col"></div>
     </div>
 </div>
 {% endblock %}
