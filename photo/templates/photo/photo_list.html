@@ -14,6 +14,9 @@
                     {{ object.author }}
                 </div>
                 <img src=" {{ object.image.url }}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <p class="card-text"> {{ object.text }} </p>
+                </div>
                 <ul class="list-group"> 
                     <li class="list-group-item">
                         <a href="{% url 'photo:like' object.id %}" class="float-left btn-like {% if user in object.like.all %} active {% endif %}">좋아요!</a>
@@ -24,18 +27,15 @@
                         {% endif %}
                         <a href="{% url 'photo:favorite' object.id %}" class="float-right btn-favorite {% if user in object.favorite.all %} active {% endif %}">저장하기!</a>
                     </li>
-                    <div class="card-body list-group-item">
-                        <p class="card-text">{{ object.text }}</p>
-                    </div>
                     <li class="list-group-item">생성일 : {{ object.created }}</li>
                     <li class="list-group-item">수정일 : {{ object.updated }}</li>
                 </ul>
                 <div class="card-body">
+                    <a href="{% url 'photo:detail' object.id %}" class="card-link">댓글보기</a>
                     {% if user == object.author %}
                     <a href="{% url 'photo:update' object.id %}" class="card-link">수정하기</a>
                     <a href="{% url 'photo:delete' object.id %}" class="card-link">삭제하기</a>
                     {% endif %}
-                    <a href="{% url 'photo:detail' object.id %}" class="card-link">댓글달기</a>
                 </div>
             </div>
             {% endfor %}

@@ -1,12 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
+<style>
+    *{
+        color: white;
+    }
+</style>
 <div class="container my-3">
     <div class="row my-3">
         <div class="col-4">
             <h4>계정생성</h4>
         </div>
         <div class="col-8 text-right">
-            <span>또는 <a href="{% url 'accounts:login' %}">로그인 하세요.</a></span>
+            <span>또는 <a href="{% url 'accounts:login' %}" style="color: #17a2b8;">로그인 하세요.</a></span>
         </div>
     </div>
     <form method="post" class="post-form" action="{% url 'accounts:signup' %}">
@@ -32,7 +37,7 @@
             <input type="text" class="form-control" name="email" id="email"
                    value="{{ form.email.value|default_if_none:'' }}">
         </div>
-        <button type="submit" class="btn btn-primary">생성하기</button>
+        <button type="submit" class="btn btn-info">생성하기</button>
     </form>
 </div>
 {% endblock %}

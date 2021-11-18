@@ -6,11 +6,11 @@
 <div class="row">
     <div class="col"></div>
     <div class="col-12 col-xl-4 col-md-4">
-        <div class="card" style="width: 30rem;">
+        <div class="card" style="width: 25rem; margin-bottom: 2em">
             <img src= "{{ object.image.url }}" class="card-img-top" alt="...">
             <div class="card-body">
                 <h5 class="card-title">{{ object.author }}</h5>
-                <p class="card-text"> {{ object.text }} </p>
+                <p class="card-text">{{ object.text }} </p>
             </div>
             <ul class="list-group"> 
                 <li class="list-group-item">
@@ -22,14 +22,12 @@
                     {% endif %}
                     <a href="{% url 'photo:favorite' object.id %}" class="float-right btn-favorite {% if user in object.favorite.all %} active {% endif %}">저장하기!</a>
                 </li>
-                <div class="card-body list-group-item">
-                    <p class="card-text">{{ object.text }}</p>
-                </div>
+
                 <li class="list-group-item">생성일 : {{ object.created }}</li>
                 <li class="list-group-item">수정일 : {{ object.updated }}</li>
                 <li class="list-group-item">
                    {% if photo.comment_set.count > 0 %}
-                        <div class="mt-3">
+                        <div>
                         {% for comment in photo.comment_set.all %}  <!-- 등록한 댓글을 출력 -->
                             <div class="comment py-2 text-muted">  <!-- 댓글 각각에 comment 스타일 지정 -->
                                 <span style="white-space: pre-line;">{{ comment.content }}</span>
@@ -47,14 +45,13 @@
                             </div>
                         {% endfor %}
                         </div>
-                        {% endif %}
+                    {% endif %}
                         <div>
             </div>
             </ul>
             <div class="card-body">
                 <a href="{% url 'photo:update' object.id %}" class="card-link">수정하기</a>
                 <a href="{% url 'photo:delete' object.id %}" class="card-link">삭제하기</a>
-                <a href="{% url 'photo:comment_create' object.id %}" class="card-link">댓글달기</a>
             </div>
         </div>
     </div>
