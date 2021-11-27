@@ -4,12 +4,18 @@
 
 {% block content %}
 
+<style>
+    .col-5{
+        padding-top: 5em;
+    }
+</style>
+
 <div class='container'>
     <div class="row">
         <div class="col"></div>
         <div class="col-5">
             {% for object in object_list %}
-            <div class="card" style="margin-bottom: 2em">
+            <div class="card" style="margin-bottom: 2em;">
                 <div class="card-header">
                     {{ object.author }}
                 </div>

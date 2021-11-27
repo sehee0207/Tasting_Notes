@@ -3,10 +3,15 @@
 {% endblock %}
 
 {% block content %}
+<style>
+    .col-5{
+        padding-top: 5.5em;   
+    }
+</style>
 <div class="row">
     <div class="col"></div>
-    <div class="col-12 col-xl-4 col-md-4">
-        <div class="card" style="width: 25rem; margin-bottom: 2em">
+    <div class="col-5">
+        <div class="card" style="margin-bottom: 2em">
             <img src= "{{ object.image.url }}" class="card-img-top" alt="...">
             <div class="card-body">
                 <h5 class="card-title">{{ object.author }}</h5>
@@ -52,6 +57,7 @@
             <div class="card-body">
                 <a href="{% url 'photo:update' object.id %}" class="card-link">수정하기</a>
                 <a href="{% url 'photo:delete' object.id %}" class="card-link">삭제하기</a>
+                <a href="{% url 'photo:comment_create' object.id %}" class="card-link">댓글달기</a>
             </div>
         </div>
     </div>

@@ -4,6 +4,9 @@
 
 {% block content %}
 <style>
+    .row{
+        padding-top: 3em;
+    }
 </style>
 
 <div class="row">
@@ -15,7 +18,9 @@
                 {% if object.author == request.user %}
                 <figure class="col-md-4">
                     <div style="width : 18rem;">
-                        <img src="{{object.image.url}}" class="card-img-top" alt="...">
+                        <a href="{% url 'photo:detail' object.id %}" class="card-link">
+                            <img src="{{object.image.url}}" class="card-img-top" alt="...">
+                        </a>
                     </div>
                 </figure>
                 {% endif %}
